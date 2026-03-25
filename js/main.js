@@ -113,22 +113,24 @@ const products = [
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
 // Initialize the app
-document.addEventListener('DOMContentLoaded', function() {
-    loadProducts();
+document.addEventListener('DOMContentLoaded', function () {
+
+    cart = JSON.parse(localStorage.getItem('cart')) || [];
+
     updateCartCount();
-    
-    // Load products on homepage
-    if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/') {
+
+    // HOME
+    if (window.location.pathname.includes('index')) {
         displayFeaturedProducts();
     }
-    
-    // Load product detail page
-    if (window.location.pathname.endsWith('product-detail.html')) {
+
+    // DETAIL
+    if (window.location.pathname.includes('product-detail')) {
         displayProductDetail();
     }
-    
-    // Load cart page
-    if (window.location.pathname.endsWith('cart.html')) {
+
+    // CART (fix cứng)
+    if (document.getElementById('cart-items')) {
         displayCart();
     }
 });
