@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Load product detail page
     if (window.location.pathname.endsWith('product-detail.html')) {
-        loadProductDetail();
+        displayProductDetail();
     }
     
     // Load cart page
@@ -192,59 +192,6 @@ function loadProducts() {
     `).join('');
 }
 
-// Load product detail page
-function loadProductDetail() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const productId = parseInt(urlParams.get('id'));
-    
-    const product = products.find(p => p.id === productId);
-    if (!product) return;
-    
-    document.getElementById('product-name').textContent = product.name;
-    document.getElementById('product-price').innerHTML = `<span class="text-danger fw-bold">$${product.price}</span> <span class="original-price text-muted text-decoration-line-through">$${product.originalPrice}</span>`;
-    document.getElementById('product-description').textContent = product.description;
-    document.getElementById('product-category').textContent = product.category;
-    document.getElementById('product-image').src = product.images[0];
-    document.getElementById('product-image').alt = product.name;
-    
-    // Create image gallery
-    const imageGallery = document.getElementById('image-gallery');
-    if (imageGallery) {
-        imageGallery.innerHTML = product.images.map((img, index) => `
-            <div class="col-3">
-                <img src="${img}" class="${index === 0 ? 'border-primary' : 'border-secondary'}" 
-                     alt="Product view ${index + 1}" 
-                     onclick="changeMainImage('${img}', this)">
-            </div>
-        `).join('');
-    }
-    
-    // Create size buttons
-    const sizeSelector = document.getElementById('size-selector');
-    sizeSelector.innerHTML = product.sizes.map(size => `
-        <button class="size-btn" onclick="selectSize(this, '${size}')">${size}</button>
-    `).join('');
-    
-    // Set up add to cart button
-    document.getElementById('add-to-cart-btn').onclick = () => addToCartFromDetail(product.id);
-    
-    // Load related products
-    loadRelatedProducts(product.category, product.id);
-}
-
-// Change main image in product gallery
-function changeMainImage(imageSrc, thumbnail) {
-    document.getElementById('product-image').src = imageSrc;
-    
-    // Update thumbnail borders
-    document.querySelectorAll('#image-gallery img').forEach(img => {
-        img.classList.remove('border-primary');
-        img.classList.add('border-secondary');
-    });
-    thumbnail.classList.remove('border-secondary');
-    thumbnail.classList.add('border-primary');
-}
-
 // Load related products
 function loadRelatedProducts(category, currentProductId) {
     const relatedContainer = document.getElementById('related-products');
@@ -272,25 +219,6 @@ function loadRelatedProducts(category, currentProductId) {
             </div>
         </div>
     `).join('');
-}
-
-// Select size
-function selectSize(button, size) {
-    document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('selected'));
-    button.classList.add('selected');
-    button.dataset.size = size;
-}
-
-// Add to cart from product detail
-function addToCartFromDetail(productId) {
-    const selectedSize = document.querySelector('.size-btn.selected');
-    if (!selectedSize) {
-        showToast('Please select a size', 'error');
-        return;
-    }
-    
-    const size = selectedSize.dataset.size;
-    addToCart(productId, size);
 }
 
 // Add to cart
@@ -449,6 +377,44 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         }
     });
 });
+
+// Display product detail
+function displayProductDetail() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = parseInt(urlParams.get('id'));
+
+    console.log("ID:", productId);
+
+    const product = products.find(p => p.id === productId);
+
+    console.log("Product:", product);
+
+    if (!product) {
+        document.body.innerHTML = "<h2>Product not found</h2>";
+        return;
+    }
+
+    const container = document.getElementById('product-detail');
+    if (!container) return;
+
+    container.innerHTML = `
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col-md-6">
+                    <img src="${product.images[0]}" class="img-fluid">
+                </div>
+                <div class="col-md-6">
+                    <h2>${product.name}</h2>
+                    <h4>$${product.price}</h4>
+                    <p>${product.description}</p>
+                    <button class="btn btn-primary" onclick="addToCart(${product.id})">
+                        Add to Cart
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+}
 
 // Newsletter form submission
 document.addEventListener('DOMContentLoaded', function() {
