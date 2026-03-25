@@ -5,7 +5,8 @@ const products = [
     {
         id: 1,
         name: "Classic White Business Shirt",
-        price: 94.99,
+        price: 29.99,
+        originalPrice: 94.99,
         images: [
             "san pham 1/1.avif",
             "san pham 1/2.avif",
@@ -24,7 +25,8 @@ const products = [
     {
         id: 2,
         name: "Navy Blue Striped Shirt",
-        price: 85.99,
+        price: 27.99,
+        originalPrice: 85.99,
         images: [
             "san pham 2/Ảnh chụp màn hình 2026-03-25 174828.png",
             "san pham 2/Ảnh chụp màn hình 2026-03-25 174838.png",
@@ -41,7 +43,8 @@ const products = [
     {
         id: 3,
         name: "Light Blue Checkered Shirt",
-        price: 78.99,
+        price: 24.99,
+        originalPrice: 78.99,
         images: [
             "san pham 3/Ảnh chụp màn hình 2026-03-25 175047.png",
             "san pham 3/Ảnh chụp màn hình 2026-03-25 175103.png",
@@ -57,7 +60,8 @@ const products = [
     {
         id: 4,
         name: "White Blue Patterned Shirt",
-        price: 92.99,
+        price: 28.99,
+        originalPrice: 92.99,
         images: [
             "san pham 4/Ảnh chụp màn hình 2026-03-25 175215.png",
             "san pham 4/Ảnh chụp màn hình 2026-03-25 175222.png",
@@ -74,7 +78,8 @@ const products = [
     {
         id: 5,
         name: "Cream Beige Casual Shirt",
-        price: 81.99,
+        price: 25.99,
+        originalPrice: 81.99,
         images: [
             "san pham 5/Ảnh chụp màn hình 2026-03-25 175323.png",
             "san pham 5/Ảnh chụp màn hình 2026-03-25 175329.png",
@@ -89,7 +94,8 @@ const products = [
     {
         id: 6,
         name: "Dark Navy Business Shirt",
-        price: 88.99,
+        price: 26.99,
+        originalPrice: 88.99,
         images: [
             "san pham 6/Ảnh chụp màn hình 2026-03-25 175507.png",
             "san pham 6/Ảnh chụp màn hình 2026-03-25 175512.png",
@@ -137,12 +143,16 @@ function displayFeaturedProducts() {
     productGrid.innerHTML = featuredProducts.map(product => `
         <div class="col-md-4 mb-4 fade-in">
             <div class="card product-card clickable-product" onclick="window.location.href='product-detail.html?id=${product.id}'">
+                <div class="sale-badge">SALE</div>
                 <img src="${product.images[0]}" class="card-img-top product-image" alt="${product.name}">
                 <div class="card-body">
                     <h5 class="card-title product-title">${product.name}</h5>
                     <p class="card-text text-muted">${product.description.substring(0, 80)}...</p>
                     <div class="d-flex justify-content-between align-items-center">
-                        <span class="product-price">$${product.price}</span>
+                        <div>
+                            <span class="product-price text-danger fw-bold">$${product.price}</span>
+                            <span class="original-price text-muted text-decoration-line-through ms-2">$${product.originalPrice}</span>
+                        </div>
                         <button class="btn btn-primary btn-sm btn-add-cart" onclick="event.stopPropagation(); addToCart(${product.id})">
                             <i class="bi bi-cart-plus"></i> Add
                         </button>
@@ -162,12 +172,16 @@ function loadProducts() {
     productGrid.innerHTML = products.map(product => `
         <div class="col-md-4 mb-4 fade-in">
             <div class="card product-card clickable-product" onclick="window.location.href='product-detail.html?id=${product.id}'">
+                <div class="sale-badge">SALE</div>
                 <img src="${product.images[0]}" class="card-img-top product-image" alt="${product.name}">
                 <div class="card-body">
                     <h5 class="card-title product-title">${product.name}</h5>
                     <p class="card-text text-muted">${product.description.substring(0, 80)}...</p>
                     <div class="d-flex justify-content-between align-items-center">
-                        <span class="product-price">$${product.price}</span>
+                        <div>
+                            <span class="product-price text-danger fw-bold">$${product.price}</span>
+                            <span class="original-price text-muted text-decoration-line-through ms-2">$${product.originalPrice}</span>
+                        </div>
                         <button class="btn btn-primary btn-sm btn-add-cart" onclick="event.stopPropagation(); addToCart(${product.id})">
                             <i class="bi bi-cart-plus"></i> Add
                         </button>
@@ -187,7 +201,7 @@ function loadProductDetail() {
     if (!product) return;
     
     document.getElementById('product-name').textContent = product.name;
-    document.getElementById('product-price').textContent = `$${product.price}`;
+    document.getElementById('product-price').innerHTML = `<span class="text-danger fw-bold">$${product.price}</span> <span class="original-price text-muted text-decoration-line-through">$${product.originalPrice}</span>`;
     document.getElementById('product-description').textContent = product.description;
     document.getElementById('product-category').textContent = product.category;
     document.getElementById('product-image').src = product.images[0];
@@ -198,10 +212,9 @@ function loadProductDetail() {
     if (imageGallery) {
         imageGallery.innerHTML = product.images.map((img, index) => `
             <div class="col-3">
-                <img src="${img}" class="img-thumbnail ${index === 0 ? 'border-primary' : ''}" 
+                <img src="${img}" class="${index === 0 ? 'border-primary' : 'border-secondary'}" 
                      alt="Product view ${index + 1}" 
-                     onclick="changeMainImage('${img}', this)"
-                     style="cursor: pointer; transition: all 0.3s ease;">
+                     onclick="changeMainImage('${img}', this)">
             </div>
         `).join('');
     }
@@ -242,11 +255,15 @@ function loadRelatedProducts(category, currentProductId) {
     relatedContainer.innerHTML = relatedProducts.map(product => `
         <div class="col-md-4 mb-4">
             <div class="card product-card clickable-product" onclick="window.location.href='product-detail.html?id=${product.id}'">
+                <div class="sale-badge">SALE</div>
                 <img src="${product.images[0]}" class="card-img-top product-image" alt="${product.name}">
                 <div class="card-body">
                     <h6 class="card-title product-title">${product.name}</h6>
                     <div class="d-flex justify-content-between align-items-center">
-                        <span class="product-price">$${product.price}</span>
+                        <div>
+                            <span class="product-price text-danger fw-bold">$${product.price}</span>
+                            <span class="original-price text-muted text-decoration-line-through ms-2">$${product.originalPrice}</span>
+                        </div>
                         <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); addToCart(${product.id})">
                             <i class="bi bi-cart-plus"></i> Add
                         </button>

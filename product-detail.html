@@ -52,9 +52,11 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-6">
-                    <img id="product-image" src="" alt="" class="img-fluid product-detail-image mb-3">
-                    <div class="row" id="image-gallery">
-                        <!-- Product gallery images will be loaded here by JavaScript -->
+                    <div class="product-image-container">
+                        <img id="product-image" src="" alt="" class="img-fluid product-detail-main-image">
+                        <div class="row g-2 mt-3" id="image-gallery">
+                            <!-- Product gallery images will be loaded here by JavaScript -->
+                        </div>
                     </div>
                 </div>
                 <div class="col-lg-6">
@@ -106,15 +108,60 @@
     </section>
 
     <!-- Footer -->
-    <footer class="bg-dark text-white py-4">
+    <footer class="bg-dark text-white py-5">
         <div class="container">
             <div class="row">
-                <div class="col-md-6">
-                    <h5>Storythread Studio</h5>
-                    <p class="text-muted">Your destination for premium men's fashion</p>
+                <!-- Policy Section -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h5 class="mb-3">Policy</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <a href="privacy-policy.html" class="text-white-50 text-decoration-none">
+                                <i class="bi bi-shield-check me-2"></i>Privacy Policy
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="shipping-policy.html" class="text-white-50 text-decoration-none">
+                                <i class="bi bi-truck me-2"></i>Shipping Policy
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="terms-conditions.html" class="text-white-50 text-decoration-none">
+                                <i class="bi bi-file-text me-2"></i>Terms & Conditions
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="returns-refunds.html" class="text-white-50 text-decoration-none">
+                                <i class="bi bi-arrow-repeat me-2"></i>Returns & Refunds
+                            </a>
+                        </li>
+                    </ul>
                 </div>
-                <div class="col-md-6 text-md-end">
-                    <p>&copy; 2024 Storythread Studio. All rights reserved.</p>
+                
+                <!-- Stay Updated Section -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h5 class="mb-3">Stay Updated</h5>
+                    <p class="text-white-50 mb-3">Get exclusive offers and be the first to know about new arrivals</p>
+                    <form class="newsletter-form">
+                        <div class="input-group mb-3">
+                            <input type="email" class="form-control" placeholder="Enter your email" required>
+                            <button class="btn btn-primary" type="submit">Subscribe</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Storythread Studio Section -->
+                <div class="col-lg-4 col-md-12 mb-4">
+                    <h5 class="mb-3">Storythread Studio</h5>
+                    <p class="text-white-50 mb-3">Your destination for premium men's fashion. We craft sophisticated shirts that blend timeless elegance with modern style.</p>
+                </div>
+            </div>
+            
+            <!-- Bottom Footer -->
+            <hr class="border-secondary">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="text-white-50 mb-0">&copy; 2024 Storythread Studio. All rights reserved.</p>
                 </div>
             </div>
         </div>
