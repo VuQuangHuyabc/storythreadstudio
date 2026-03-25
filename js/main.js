@@ -465,15 +465,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Add parallax effect to hero section
-    window.addEventListener('scroll', function() {
-        const scrolled = window.pageYOffset;
-        const heroSection = document.querySelector('.hero-section-modern');
-        if (heroSection) {
-            heroSection.style.transform = `translateY(${scrolled * 0.5}px)`;
-        }
-    });
-    
     // Animate elements on scroll
     const observerOptions = {
         threshold: 0.1,
