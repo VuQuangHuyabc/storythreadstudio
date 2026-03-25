@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - Storythread Studio</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="bi bi-bag-fill"></i> Storythread Studio
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="products.html">Products</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="cart.html">
+                            <i class="bi bi-cart3"></i> Cart
+                            <span class="badge bg-primary cart-count">0</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Cart Section -->
+    <section class="py-5 mt-5">
+        <div class="container">
+            <h1 class="mb-4">Shopping Cart</h1>
+            
+            <div class="row">
+                <div class="col-lg-8">
+                    <div id="cart-items">
+                        <!-- Cart items will be loaded by JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Order Summary</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Subtotal:</span>
+                                <span id="cart-subtotal">$0.00</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Shipping:</span>
+                                <span id="shipping-cost">$0.00</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Tax:</span>
+                                <span id="tax-cost">$0.00</span>
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between mb-3">
+                                <h5>Total:</h5>
+                                <h5 id="cart-total">$0.00</h5>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="promo-code" class="form-label">Promo Code</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="promo-code" placeholder="Enter code">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="applyPromoCode()">Apply</button>
+                                </div>
+                            </div>
+                            
+                            <button class="btn btn-primary w-100 mb-2" onclick="proceedToCheckout()">
+                                <i class="bi bi-credit-card"></i> Proceed to Checkout
+                            </button>
+                            <a href="index.html" class="btn btn-outline-secondary w-100">
+                                <i class="bi bi-arrow-left"></i> Continue Shopping
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Shipping Info -->
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h6 class="mb-0">Shipping Information</h6>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled mb-0">
+                                <li><i class="bi bi-truck text-primary"></i> Free shipping on orders over $50</li>
+                                <li><i class="bi bi-clock text-primary"></i> 5-7 business days delivery</li>
+                                <li><i class="bi bi-shield-check text-primary"></i> Secure payment processing</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recommended Products -->
+            <div class="row mt-5">
+                <div class="col-12">
+                    <h3 class="mb-4">You might also like</h3>
+                    <div class="row" id="recommended-products">
+                        <!-- Recommended products will be loaded by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Checkout Modal -->
+    <div class="modal fade" id="checkoutModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Checkout</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="checkout-form">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6 class="mb-3">Billing Information</h6>
+                                <div class="mb-3">
+                                    <label for="firstName" class="form-label">First Name</label>
+                                    <input type="text" class="form-control" id="firstName" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="lastName" class="form-label">Last Name</label>
+                                    <input type="text" class="form-control" id="lastName" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="phone" class="form-label">Phone</label>
+                                    <input type="tel" class="form-control" id="phone" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="mb-3">Shipping Address</h6>
+                                <div class="mb-3">
+                                    <label for="address" class="form-label">Address</label>
+                                    <input type="text" class="form-control" id="address" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="city" class="form-label">City</label>
+                                    <input type="text" class="form-control" id="city" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="state" class="form-label">State</label>
+                                    <input type="text" class="form-control" id="state" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="zipCode" class="form-label">ZIP Code</label>
+                                    <input type="text" class="form-control" id="zipCode" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <h6 class="mb-3 mt-4">Payment Information</h6>
+                        <div class="mb-3">
+                            <label for="cardNumber" class="form-label">Card Number</label>
+                            <input type="text" class="form-control" id="cardNumber" placeholder="1234 5678 9012 3456" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="expiry" class="form-label">Expiry Date</label>
+                                    <input type="text" class="form-control" id="expiry" placeholder="MM/YY" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="cvv" class="form-label">CVV</label>
+                                    <input type="text" class="form-control" id="cvv" placeholder="123" required>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="completeOrder()">Complete Order</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Storythread Studio</h5>
+                    <p class="text-muted">Your destination for premium men's fashion</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p>&copy; 2024 Storythread Studio. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="js/main.js"></script>
+    
+    <script>
+        // Additional cart-specific functions
+        let promoApplied = false;
+        let discountAmount = 0;
+
+        function updateOrderSummary() {
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const shipping = subtotal > 50 ? 0 : 9.99;
+            const tax = subtotal * 0.08; // 8% tax
+            const total = subtotal + shipping + tax - discountAmount;
+
+            document.getElementById('cart-subtotal').textContent = `$${subtotal.toFixed(2)}`;
+            document.getElementById('shipping-cost').textContent = shipping === 0 ? 'FREE' : `$${shipping.toFixed(2)}`;
+            document.getElementById('tax-cost').textContent = `$${tax.toFixed(2)}`;
+            document.getElementById('cart-total').textContent = `$${total.toFixed(2)}`;
+        }
+
+        function applyPromoCode() {
+            const promoCode = document.getElementById('promo-code').value.toUpperCase();
+            
+            if (promoApplied) {
+                showToast('Promo code already applied', 'error');
+                return;
+            }
+
+            // Simple promo code logic
+            if (promoCode === 'SAVE10') {
+                discountAmount = 10;
+                promoApplied = true;
+                updateOrderSummary();
+                showToast('Promo code applied! $10 discount', 'success');
+                document.getElementById('promo-code').disabled = true;
+            } else if (promoCode === 'SAVE20') {
+                const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                discountAmount = subtotal * 0.2; // 20% discount
+                promoApplied = true;
+                updateOrderSummary();
+                showToast('Promo code applied! 20% discount', 'success');
+                document.getElementById('promo-code').disabled = true;
+            } else {
+                showToast('Invalid promo code', 'error');
+            }
+        }
+
+        function proceedToCheckout() {
+            if (cart.length === 0) {
+                showToast('Your cart is empty', 'error');
+                return;
+            }
+            
+            const modal = new bootstrap.Modal(document.getElementById('checkoutModal'));
+            modal.show();
+        }
+
+        function completeOrder() {
+            const form = document.getElementById('checkout-form');
+            
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            // Simulate order completion
+            showToast('Order placed successfully! Thank you for your purchase.', 'success');
+            
+            // Clear cart
+            cart = [];
+            saveCart();
+            updateCartCount();
+            displayCart();
+            updateOrderSummary();
+            
+            // Close modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('checkoutModal'));
+            modal.hide();
+            
+            // Reset form
+            form.reset();
+            promoApplied = false;
+            discountAmount = 0;
+            document.getElementById('promo-code').disabled = false;
+            document.getElementById('promo-code').value = '';
+        }
+
+        // Load recommended products
+        function loadRecommendedProducts() {
+            const recommendedContainer = document.getElementById('recommended-products');
+            if (!recommendedContainer) return;
+
+            const recommended = products.slice(0, 3); // Show first 3 products as recommendations
+            
+            recommendedContainer.innerHTML = recommended.map(product => `
+                <div class="col-md-4 mb-4">
+                    <div class="card product-card clickable-product" onclick="window.location.href='product-detail.html?id=${product.id}'">
+                        <img src="${product.images[0]}" class="card-img-top product-image" alt="${product.name}">
+                        <div class="card-body">
+                            <h6 class="card-title product-title">${product.name}</h6>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="product-price">$${product.price}</span>
+                                <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); addToCart(${product.id})">
+                                    <i class="bi bi-cart-plus"></i> Add
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Override the displayCart function to include order summary update
+        const originalDisplayCart = displayCart;
+        displayCart = function() {
+            originalDisplayCart();
+            updateOrderSummary();
+            loadRecommendedProducts();
+        };
+    </script>
+</body>
+</html>

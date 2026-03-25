@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - Storythread Studio</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="bi bi-bag-fill"></i> Storythread Studio
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="products.html">Products</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cart.html">
+                            <i class="bi bi-cart3"></i> Cart
+                            <span class="badge bg-primary cart-count">0</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Products Header -->
+    <section class="py-5 mt-5 bg-light">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 id="page-title" class="display-4 fw-bold mb-3">All Products</h1>
+                    <p id="page-description" class="text-muted">Browse our complete collection of premium shirts</p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <div class="d-flex align-items-center justify-content-md-end gap-2">
+                        <label for="sort-select" class="form-label mb-0">Sort by:</label>
+                        <select class="form-select" id="sort-select" style="width: auto;">
+                            <option value="default">Default</option>
+                            <option value="price-low">Price: Low to High</option>
+                            <option value="price-high">Price: High to Low</option>
+                            <option value="name">Name</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filter Pills -->
+    <section class="py-3 bg-white border-bottom">
+        <div class="container">
+            <div class="d-flex flex-wrap gap-2">
+                <a href="products.html" class="btn btn-outline-primary filter-btn">All Products</a>
+                <a href="products.html?category=formal" class="btn btn-outline-primary filter-btn">Formal</a>
+                <a href="products.html?category=casual" class="btn btn-outline-primary filter-btn">Casual</a>
+                <a href="products.html?category=premium" class="btn btn-outline-primary filter-btn">Premium</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Grid -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row" id="all-products-grid">
+                <!-- Products will be loaded here by JavaScript -->
+            </div>
+            
+            <!-- No Results Message -->
+            <div id="no-results" class="text-center py-5" style="display: none;">
+                <i class="bi bi-search fs-1 text-muted mb-3"></i>
+                <h4>No products found</h4>
+                <p class="text-muted">Try adjusting your filters or browse all products.</p>
+                <a href="products.html" class="btn btn-primary mt-3">View All Products</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Storythread Studio</h5>
+                    <p class="text-muted">Your destination for premium men's fashion</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p>&copy; 2024 Storythread Studio. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="js/main.js"></script>
+    
+    <script>
+        // Additional JavaScript for products page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProductsPage();
+            
+            // Sort functionality
+            document.getElementById('sort-select').addEventListener('change', function() {
+                sortProducts(this.value);
+            });
+            
+            // Update active filter button
+            updateActiveFilter();
+        });
+        
+        function loadProductsPage() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const category = urlParams.get('category');
+            
+            let filteredProducts = products;
+            let pageTitle = 'All Products';
+            let pageDescription = 'Browse our complete collection of premium shirts';
+            
+            if (category) {
+                filteredProducts = products.filter(p => p.category.toLowerCase() === category.toLowerCase());
+                pageTitle = category.charAt(0).toUpperCase() + category.slice(1) + ' Shirts';
+                pageDescription = `Discover our collection of ${category} shirts for every occasion`;
+            }
+            
+            // Update page header
+            document.getElementById('page-title').textContent = pageTitle;
+            document.getElementById('page-description').textContent = pageDescription;
+            
+            // Update document title
+            document.title = pageTitle + ' - Gentleman\'s Shirts';
+            
+            // Display products
+            displayFilteredProducts(filteredProducts);
+        }
+        
+        function displayFilteredProducts(productsToShow) {
+            const productGrid = document.getElementById('all-products-grid');
+            const noResults = document.getElementById('no-results');
+            
+            if (productsToShow.length === 0) {
+                productGrid.innerHTML = '';
+                noResults.style.display = 'block';
+                return;
+            }
+            
+            noResults.style.display = 'none';
+            
+            productGrid.innerHTML = productsToShow.map(product => `
+                <div class="col-md-4 mb-4 fade-in">
+                    <div class="card product-card clickable-product" onclick="window.location.href='product-detail.html?id=${product.id}'">
+                        <img src="${product.images[0]}" class="card-img-top product-image" alt="${product.name}">
+                        <div class="card-body">
+                            <h5 class="card-title product-title">${product.name}</h5>
+                            <p class="card-text text-muted">${product.description.substring(0, 80)}...</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="product-price">$${product.price}</span>
+                                <button class="btn btn-primary btn-sm btn-add-cart" onclick="event.stopPropagation(); addToCart(${product.id})">
+                                    <i class="bi bi-cart-plus"></i> Add
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function sortProducts(sortBy) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const category = urlParams.get('category');
+            
+            let sortedProducts = category ? 
+                products.filter(p => p.category.toLowerCase() === category.toLowerCase()) : 
+                [...products];
+            
+            switch(sortBy) {
+                case 'price-low':
+                    sortedProducts.sort((a, b) => a.price - b.price);
+                    break;
+                case 'price-high':
+                    sortedProducts.sort((a, b) => b.price - a.price);
+                    break;
+                case 'name':
+                    sortedProducts.sort((a, b) => a.name.localeCompare(b.name));
+                    break;
+                default:
+                    // Keep original order
+                    break;
+            }
+            
+            displayFilteredProducts(sortedProducts);
+        }
+        
+        function updateActiveFilter() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const category = urlParams.get('category');
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Add active class to current filter
+            if (category) {
+                const activeBtn = document.querySelector(`.filter-btn[href*="${category}"]`);
+                if (activeBtn) {
+                    activeBtn.classList.add('active');
+                }
+            } else {
+                const allBtn = document.querySelector('.filter-btn[href="products.html"]');
+                if (allBtn) {
+                    allBtn.classList.add('active');
+                }
+            }
+        }
+    </script>
+</body>
+</html>
